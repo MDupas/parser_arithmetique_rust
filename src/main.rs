@@ -1,12 +1,11 @@
 fn main() {
-    println!("Hello, world!");
-    //1 - Lire un fichier
     // Boucle
         //2 - Lire un caractère
         //3 - Déterminer quoi faire du caractère (augmenter chiffre, opération)
         //4 - Construire AST (on s'en fout des prios)
 
     let instruction = "3 + 1 - 21";
+
 
 }
 
