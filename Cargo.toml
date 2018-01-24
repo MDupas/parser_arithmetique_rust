@@ -1,0 +1,6 @@
+[package]
+name = "ParserArithmetique"
+version = "0.1.0"
+authors = ["TIMA"]
+
+[dependencies]
