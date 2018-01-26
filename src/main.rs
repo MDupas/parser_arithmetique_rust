@@ -1,17 +1,60 @@
 fn main() {
-    // Boucle
-        //2 - Lire un caractère
-        //3 - Déterminer quoi faire du caractère (augmenter chiffre, opération)
-        //4 - Construire AST (on s'en fout des prios)
-
     let instruction = "3 + 1 - 21";
+    let mut chars = instruction.chars();
 
+    let num1 = 0;
+    for c in chars.next() { // TODO : premier tour de boucle pour capter le 1er nombre
+        let num2 = match c {
+            ' ' => break,
+            _ => match c.to_digit(10) {
+                None => panic!("Devrait être un bombre !"),
+                Some(n) => num1 * 10 + n,
+            }
+        };
+    }
+    let mut eva1 = Evaluable::Numb(num1);
 
+    loop {
+        let c = match chars.next() {
+            None => break,
+            Some(new_c) => new_c,
+        };
+        let op = match c { // un seul match pour l'opérateur
+            '+' => Operator::Add,
+            '-' => Operator::Min,
+            '*' => Operator::Mul,
+            '/' => Operator::Div,
+            _ => panic!("Devrait être un opérateur !")
+        };
+
+        chars.next(); // Normalement, juste un espace ; TODO il peut ne pas y en avoir !
+
+        let num2 = 0;
+        for c in chars.next() { // 2e boucle pour 2e nombre
+            let num2 = match c {
+                ' ' => break,
+                _ => match c.to_digit(10) {
+                    None => panic!("Devrait être un bombre !"),
+                    Some(n) => num2 * 10 + n,
+                }
+            };
+        }
+
+        let eva2 = Evaluable::Numb(num2);
+
+        eva1 = Evaluable::Oper(BinaryOperator::new(eva1, eva2, op));
+
+    }
+    let result = match eva1 {
+        Evaluable::Numb(numb) => numb,
+        Evaluable::Oper(oper) => oper.eval(),
+    };
+    println!("Résultat : {}", result);
 }
 
 enum Evaluable {
-    Numb(int),
-    Oper(Ast)
+    Numb(u32),
+    Oper(BinaryOperator)
 }
 
 enum Operator {
@@ -21,31 +64,38 @@ enum Operator {
     Div
 }
 
-struct Ast {
+struct BinaryOperator {
     a: Evaluable,
     b: Evaluable,
     op: Operator
 }
 
-impl Ast {
-    fn set_a(&self, new_a: Evaluable) -> &Ast {
-        a = newA;
-        &self
+impl BinaryOperator {
+
+    fn new(a: Evaluable, b: Evaluable, op: Operator) -> BinaryOperator {
+        BinaryOperator {
+            a,
+            b,
+            op
+        }
     }
 
-    fn set_b(&self, new_b: Evaluable) -> &Ast {
-        b = newB;
-        &self
+    fn a(&self) -> Evaluable { // Pourrais juste mettre les fields public
+        self.a
     }
 
-    fn eval(&self) -> int {
-        x = match &self.a {
+    fn b(&self) -> Evaluable {
+        self.b
+    }
+
+    fn eval(&self) -> u32 {
+        let x = match &self.a {
             Evaluable::Numb(num) => num,
-            Evaluable::Oper(&ast) => &ast.eval()
+            Evaluable::Oper(&bin_op) => &bin_op.eval()
         };
-        y = match &self.b {
+        let y = match &self.b {
             Evaluable::Numb(num) => num,
-            Evaluable::Oper(&ast) => &ast.eval()
+            Evaluable::Oper(&bin_op) => &bin_op.eval()
         };
         match &self.op {
             Operator::Add => x + y,
