@@ -1,31 +1,15 @@
 fn main() {
-    let instruction = "3 + 1 - 21";
+    let instruction = "3 + 2 - 2 * 10 / 2";
     let mut chars = instruction.chars();
-    let mut num1 : i32 = 0;
-    let mut i = 0;
 
-    println!("taille : {}", chars.clone().count());
-    loop { // TODO : fonction (pour éviter duplication / apprendre des trucs)
-        let c = match chars.next() {
-            None => panic!("L'instruction de calcul est vide"),
-            Some(ch) => ch,
-        };
-        println!("index {}", i);
-        i += 1;
-        num1 = match c {
-            ' ' => break,
-            _ => match c.to_digit(10) {
-                None => panic!("Devrait être un nombre !"),
-                Some(n) => num1 * 10 + (n as i32),
-            }
-        };
-        println!("testeuh");
-    }
-    println!("1er nombre : {}", num1);
+    println!("Instruction : {} ", instruction);
+
+    let num1 = search_number(&mut chars);
     let mut eva1 = Evaluable::Numb(num1);
 
     loop {
-        println!("taille : {}", chars.clone().count());
+        //println!("taille : {}", chars.clone().count());
+
         let c = match chars.next() {
             None => break,
             Some(new_c) => new_c,
@@ -41,20 +25,7 @@ fn main() {
 
         chars.next(); // Normalement, juste un espace ; TODO il peut ne pas y en avoir !
 
-        let mut num2 = 0;
-        loop { // 2e boucle pour 2e nombre
-            let c = match chars.next() {
-                None => break,
-                Some(ch) => ch,
-            };
-            num2 = match c {
-                ' ' => break,
-                _ => match c.to_digit(10) {
-                    None => panic!("Devrait être un nombre !\nÉtait un \"{}\"", c),
-                    Some(n) => num2 * 10 + (n as i32),
-                }
-            };
-        }
+        let num2 = search_number(&mut chars);
 
         let eva2 = Evaluable::Numb(num2);
 
@@ -66,6 +37,24 @@ fn main() {
         Evaluable::Oper(oper) => (*oper).eval(),
     };
     println!("Résultat : {}", result);
+}
+
+fn search_number( chars: &mut std::str::Chars) -> i32 {
+    let mut num : i32 = 0;
+    loop {
+        let c = match chars.next() {
+            None => break,
+            Some(ch) => ch,
+        };
+        num = match c {
+            ' ' => break,
+            _ => match c.to_digit(10) {
+                None => panic!("Devrait être un nombre !\nÉtait un \"{}\"", c),
+                Some(n) => num * 10 + (n as i32),
+            }
+        };
+    };
+    num
 }
 
 enum Evaluable {
@@ -94,14 +83,6 @@ impl BinaryOperator {
             b,
             op
         }
-    }
-
-    pub fn a(&self) -> &Evaluable { // Pourrais juste mettre les fields public
-        &self.a
-    }
-
-    pub fn b(&self) -> &Evaluable {
-        &self.b
     }
 
     pub fn eval(&self) -> i32 {
