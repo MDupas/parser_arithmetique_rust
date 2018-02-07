@@ -1,6 +1,8 @@
 [package]
 name = "ParserArithmetique"
 version = "0.1.0"
-authors = ["TIMA"]
+authors = ["MDupas <32423534+MDupas@users.noreply.github.com>"]
 
 [dependencies]
+oak = "*"
+oak_runtime = "*"
