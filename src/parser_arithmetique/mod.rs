@@ -1,5 +1,5 @@
-// Attribution 4.0 International (CC BY 4.0)
-// more on https://creativecommons.org/licenses/by/4.0/#
+// Copyright (c) [2018] [Marin Dupas]
+// https://opensource.org/licenses/MIT
 
 pub use self::ast::Operator;
 pub use self::ast::Evaluable;
@@ -9,7 +9,7 @@ mod ast;
 pub use self::parser::*;
 mod parser;
 
-extern crate std;
+//extern crate std;
 
 pub fn main() {
     let instruction = "3 + 2 - 2 * 10 / 2";

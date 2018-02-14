@@ -1,5 +1,5 @@
-// Attribution 4.0 International (CC BY 4.0)
-// more on https://creativecommons.org/licenses/by/4.0/#
+// Copyright (c) [2018] [Marin Dupas]
+// https://opensource.org/licenses/MIT
 
 pub enum Evaluable {
     Numb(i32),

@@ -1,7 +1,8 @@
 [package]
 name = "ParserArithmetique"
 version = "0.1.0"
-authors = ["MDupas <32423534+MDupas@users.noreply.github.com>"]
+authors = ["MDupas"]
+license = "https://opensource.org/licenses/MIT"
 
 [dependencies]
 oak = "*"

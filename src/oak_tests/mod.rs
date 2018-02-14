@@ -1,18 +1,18 @@
-/*#![feature(plugin)]
-#![plugin(oak)]
+//#![feature(plugin)]
+//#![plugin(oak)]
 
-extern crate std;
+//extern crate std;
 extern crate oak_runtime;
 use oak_runtime::*;
 
 grammar! calc {
   #![show_api]
 
-  /*program
+  program
     = spacing expression // modif
-    / spacing command*/
+    / spacing command
 
-  program = spacing expression
+  //program = spacing expression
 
   command // modif
     = fn_kw identifier lparen (identifier)* rparen lcurly expression rcurly > create_function
@@ -96,7 +96,8 @@ grammar! calc {
     Number(u32),
     BinaryExpr(BinOp, PExpr, PExpr),
     UnaryExpr(UnaOp, PExpr),
-    LetIn(String, PExpr, PExpr)
+    LetIn(String, PExpr, PExpr),
+    Function(String, Vec<String>, PExpr) // modif
   }
 
   #[derive(Debug)]
@@ -143,8 +144,8 @@ grammar! calc {
     Box::new(LetIn(var, value, expr))
   }
 
-  fn create_function(name: String, params: Vec<(PExpr, BinOp)>, expression: PExpr) -> PExpr { // modif
-
+  fn create_function(name: String, params: Vec<String>, expression: PExpr) -> PExpr { // modif
+    Box::new(Function(name, params, expression))
   }
 
   fn add_bin_op() -> BinOp { Add }
@@ -170,7 +171,7 @@ fn analyse_state(state: ParseState<StrStream, calc::PExpr>) {
     }
 }
 
-fn main() {
+pub fn main() {
     analyse_state(calc::parse_program("2 * a".into_state())); // Complete
     analyse_state(calc::parse_program("2 *  ".into_state())); // Partial
     analyse_state(calc::parse_program("  * a".into_state())); // Erroneous
@@ -192,4 +193,10 @@ fn main() {
      a^2 - (let x = a in x * 2) \
     ";
     println!("{:?}", calc::parse_program(program2.into_state()).into_result());
-}*/
+
+    let program3 =
+        "fn plusTrois ( nombre ) { \
+     let b = 3 in \
+     nombre + b }";
+    analyse_state(calc::parse_program(program3.into_state()));
+}
